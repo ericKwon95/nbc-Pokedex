@@ -12,12 +12,12 @@ struct PokemonDetailResponse: Codable {
     let name: String
     let height: Int
     let weight: Int
-    let types: PokemonTypeListResponse
+    let types: [PokemonTypeListResponse]
 }
 
 struct PokemonTypeListResponse: Codable {
     let slot: Int
-    let type: [PokemonTypeResponse]
+    let type: PokemonTypeResponse
 }
 
 struct PokemonTypeResponse: Codable {

@@ -48,7 +48,7 @@ final class PokedexViewModel {
                         name: response.name,
                         height: response.height,
                         weight: response.weight,
-                        type: response.types.type.first!.name
+                        type: response.types.first!.type.name
                     )
                     fetchedPokemons.append(newPokemon)
                     
