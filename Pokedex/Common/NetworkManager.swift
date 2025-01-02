@@ -41,8 +41,8 @@ final class NetworkManager {
                 do {
                     let decodedData = try JSONDecoder().decode(T.self, from: data)
                     observer(.success(decodedData))
-                } catch {
-                    observer(.failure(NetworkError.decodingFail))
+                } catch let error{
+                    observer(.failure(error))
                 }
             }.resume()
             
