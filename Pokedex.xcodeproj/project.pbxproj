@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		605B80522D1ECA0F0087BC29 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 605B80512D1ECA0F0087BC29 /* RxBlocking */; };
 		605B80542D1ECA0F0087BC29 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 605B80532D1ECA0F0087BC29 /* RxCocoa */; };
 		605B80562D1ECA0F0087BC29 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 605B80552D1ECA0F0087BC29 /* RxRelay */; };
 		605B80582D1ECA0F0087BC29 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 605B80572D1ECA0F0087BC29 /* RxSwift */; };
-		605B805A2D1ECA0F0087BC29 /* RxTest in Frameworks */ = {isa = PBXBuildFile; productRef = 605B80592D1ECA0F0087BC29 /* RxTest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,11 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				605B805A2D1ECA0F0087BC29 /* RxTest in Frameworks */,
 				605B80562D1ECA0F0087BC29 /* RxRelay in Frameworks */,
 				605B80542D1ECA0F0087BC29 /* RxCocoa in Frameworks */,
 				605B80582D1ECA0F0087BC29 /* RxSwift in Frameworks */,
-				605B80522D1ECA0F0087BC29 /* RxBlocking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
