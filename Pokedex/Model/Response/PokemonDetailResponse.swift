@@ -24,4 +24,3 @@ struct PokemonTypeResponse: Codable {
     let name: String
     let url: String
 }
-
