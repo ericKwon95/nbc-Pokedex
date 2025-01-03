@@ -1,5 +1,5 @@
 //
-//  UIImageView+.swift
+//  UIImageView+SetImage.swift
 //  Pokedex
 //
 //  Created by 권승용 on 1/2/25.
