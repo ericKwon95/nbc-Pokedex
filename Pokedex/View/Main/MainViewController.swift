@@ -56,13 +56,18 @@ final class MainViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.pokemonListSubject
+        viewModel.pokemonListRelay
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] pokenmonThumbnails in
                 self?.pokemonThumbnails += pokenmonThumbnails
                 self?.collectionView.reloadData()
                 self?.isFetching = false
-            } onError: { [weak self] error in
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.errorRelay
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] error in
                 print(error)
                 self?.isFetching = false
             }
@@ -116,7 +121,7 @@ private extension MainViewController {
             elementKind: UICollectionView.elementKindSectionHeader,
             alignment: .top
         )
-
+        
         section.boundarySupplementaryItems = [header]
         
         return UICollectionViewCompositionalLayout(section: section)

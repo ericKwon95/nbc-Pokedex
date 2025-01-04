@@ -45,11 +45,16 @@ final class DetailViewController: UIViewController {
     }
     
     private func bind() {
-        viewModel.pokemonDetailSubject
+        viewModel.pokemonDetailRelay
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] pokemonDetail in
                 self?.pokemonDetailView.setup(with: pokemonDetail)
-            } onError: { error in
+            }
+            .disposed(by: disposeBag)
+        
+        viewModel.errorRelay
+            .observe(on: MainScheduler.instance)
+            .subscribe { error in
                 print(error)
             }
             .disposed(by: disposeBag)

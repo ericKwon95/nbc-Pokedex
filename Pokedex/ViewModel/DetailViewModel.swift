@@ -7,15 +7,17 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 final class DetailViewModel {
-    let pokemonDetailSubject = PublishSubject<PokemonDetail>()
+    let pokemonDetailRelay = PublishRelay<PokemonDetail>()
+    let errorRelay = PublishRelay<Error>()
     
     private let disposeBag = DisposeBag()
     
     func fetchPokemonDetail(from number: Int) {
         guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(number)/") else {
-            pokemonDetailSubject.onError(NetworkError.invalidURL)
+            errorRelay.accept(NetworkError.invalidURL)
             return
         }
         
@@ -28,9 +30,9 @@ final class DetailViewModel {
                     weight: response.weight,
                     type: PokemonTypeName(rawValue: response.types.first!.type.name)?.displayName ?? "미정"
                 )
-                self?.pokemonDetailSubject.onNext(newPokemonDetail)
+                self?.pokemonDetailRelay.accept(newPokemonDetail)
             } onFailure: { [weak self] error in
-                self?.pokemonDetailSubject.onError(error)
+                self?.errorRelay.accept(error)
             }
             .disposed(by: disposeBag)
     }

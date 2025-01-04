@@ -7,9 +7,11 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 final class MainViewModel {
-    let pokemonListSubject = BehaviorSubject<[PokemonThumbnail]>(value: [])
+    let pokemonListRelay = BehaviorRelay<[PokemonThumbnail]>(value: [])
+    let errorRelay = PublishRelay<Error>()
     
     private let limit = 20
     private var offset = 0
@@ -18,7 +20,7 @@ final class MainViewModel {
     
     func fetchPokemonList() {
         guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)") else {
-            pokemonListSubject.onError(NetworkError.invalidURL)
+            errorRelay.accept(NetworkError.invalidURL)
             return
         }
         offset += limit
@@ -26,9 +28,9 @@ final class MainViewModel {
         NetworkManager.shared.fetch(url: url)
             .subscribe { [weak self] (response: PokemonListResponse) in
                 let thumbnails = self?.makePokemonThumbnails(from: response)
-                self?.pokemonListSubject.onNext(thumbnails ?? [])
+                self?.pokemonListRelay.accept(thumbnails ?? [])
             } onFailure: { [weak self] error in
-                self?.pokemonListSubject.onError(error)
+                self?.errorRelay.accept(error)
             }
             .disposed(by: disposeBag)
     }
