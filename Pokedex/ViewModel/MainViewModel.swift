@@ -21,7 +21,8 @@ final class MainViewModel {
             pokemonListSubject.onError(NetworkError.invalidURL)
             return
         }
-        
+        offset += limit
+
         NetworkManager.shared.fetch(url: url)
             .subscribe { [weak self] (response: PokemonListResponse) in
                 let thumbnails = self?.makePokemonThumbnails(from: response)
