@@ -134,7 +134,7 @@ extension MainViewController: UICollectionViewDataSource {
 
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let newVC = DetailViewController()
+        let newVC = DetailViewController(pokemonNumber: indexPath.row + 1)
         navigationController?.pushViewController(newVC, animated: true)
     }
 }
