@@ -114,11 +114,9 @@
 			);
 			name = Pokedex;
 			packageProductDependencies = (
-				605B80512D1ECA0F0087BC29 /* RxBlocking */,
 				605B80532D1ECA0F0087BC29 /* RxCocoa */,
 				605B80552D1ECA0F0087BC29 /* RxRelay */,
 				605B80572D1ECA0F0087BC29 /* RxSwift */,
-				605B80592D1ECA0F0087BC29 /* RxTest */,
 				6063F2E72D26AE9100D97E5F /* SnapKit */,
 			);
 			productName = Pokedex;
@@ -517,11 +515,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		605B80512D1ECA0F0087BC29 /* RxBlocking */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 605B80502D1ECA0F0087BC29 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxBlocking;
-		};
 		605B80532D1ECA0F0087BC29 /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 605B80502D1ECA0F0087BC29 /* XCRemoteSwiftPackageReference "RxSwift" */;
@@ -536,11 +529,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 605B80502D1ECA0F0087BC29 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
-		};
-		605B80592D1ECA0F0087BC29 /* RxTest */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 605B80502D1ECA0F0087BC29 /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = RxTest;
 		};
 		6063F2E72D26AE9100D97E5F /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
