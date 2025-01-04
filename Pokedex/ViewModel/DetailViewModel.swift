@@ -23,10 +23,10 @@ final class DetailViewModel {
             .subscribe { [weak self] (response: PokemonDetailResponse) in
                 let newPokemonDetail = PokemonDetail(
                     number: response.id,
-                    name: response.name,
+                    name: PokemonTranslator.getKoreanName(for: response.name),
                     height: response.height,
                     weight: response.weight,
-                    type: response.types.first!.type.name
+                    type: PokemonTypeName(rawValue: response.types.first!.type.name)?.displayName ?? "미정"
                 )
                 self?.pokemonDetailSubject.onNext(newPokemonDetail)
             } onFailure: { [weak self] error in
@@ -35,3 +35,4 @@ final class DetailViewModel {
             .disposed(by: disposeBag)
     }
 }
+
