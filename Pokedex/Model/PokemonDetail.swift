@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Pokemon: Identifiable {
+struct PokemonDetail: Identifiable {
     let id = UUID()
     let number: Int
     let name: String
