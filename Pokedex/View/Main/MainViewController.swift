@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     // MARK: - View Property
     
     private lazy var collectionView: UICollectionView = {
@@ -34,14 +34,26 @@ class MainViewController: UIViewController {
         configureUI()
     }
     
-    // MARK: - Configuration
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+    }
     
-    private func configureDelegates() {
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
+    }
+}
+
+// MARK: - Configuration & Layout
+
+private extension MainViewController {
+    func configureDelegates() {
         collectionView.delegate = self
         collectionView.dataSource = self
     }
     
-    private func configureUI() {
+    func configureUI() {
         view.backgroundColor = .mainRed
         [
             collectionView
@@ -52,7 +64,7 @@ class MainViewController: UIViewController {
         }
     }
     
-    private func makeCompositionalLayout() -> UICollectionViewLayout {
+    func makeCompositionalLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(0.333),
             heightDimension: .fractionalWidth(0.333)
@@ -121,7 +133,10 @@ extension MainViewController: UICollectionViewDataSource {
 }
 
 extension MainViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let newVC = DetailViewController()
+        navigationController?.pushViewController(newVC, animated: true)
+    }
 }
 
 @available(iOS 17.0, *)
