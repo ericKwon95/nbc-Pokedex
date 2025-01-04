@@ -6,9 +6,16 @@
 //
 
 import UIKit
+import RxSwift
 import SnapKit
 
 final class MainViewController: UIViewController {
+    
+    private let viewModel = MainViewModel()
+    private let disposeBag = DisposeBag()
+    
+    private var pokemonThumbnails = [PokemonThumbnail]()
+    
     // MARK: - View Property
     
     private lazy var collectionView: UICollectionView = {
@@ -30,8 +37,10 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bind()
         configureDelegates()
         configureUI()
+        viewModel.fetchPokemonList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,6 +51,18 @@ final class MainViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.isNavigationBarHidden = false
+    }
+    
+    private func bind() {
+        viewModel.pokemonListSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe { [weak self] pokenmonThumbnails in
+                self?.pokemonThumbnails = pokenmonThumbnails
+                self?.collectionView.reloadData()
+            } onError: { error in
+                print(error)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
@@ -102,7 +123,7 @@ private extension MainViewController {
 
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 40
+        return pokemonThumbnails.count
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -122,12 +143,7 @@ extension MainViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        guard let url = URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(indexPath.row+1).png") else {
-            return UICollectionViewCell()
-        }
-        
-        cell.configureCell(with: url)
-        
+        cell.configureCell(with: pokemonThumbnails[indexPath.row].thumbnailUrl)
         return cell
     }
 }

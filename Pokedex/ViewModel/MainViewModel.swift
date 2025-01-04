@@ -1,5 +1,5 @@
 //
-//  PokedexViewModel.swift
+//  MainViewModel.swift
 //  Pokedex
 //
 //  Created by 권승용 on 1/2/25.
@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-final class PokedexViewModel {
+final class MainViewModel {
     let pokemonListSubject = BehaviorSubject<[PokemonThumbnail]>(value: [])
     
     private let limit = 20
@@ -36,11 +36,17 @@ final class PokedexViewModel {
         response.results.compactMap {
             let url = $0.url
             let components = url.components(separatedBy: "/")
-            guard let last = components.last,
-               let number = Int(last) else {
+            guard components.count > 1,
+                  let number = Int(components[components.count - 2]),
+                  let thumbnailUrl = URL(
+                    string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(number).png"
+                  ) else {
                 return nil
             }
-            return PokemonThumbnail(number: number)
+            
+            return PokemonThumbnail(
+                number: number,
+                thumbnailUrl: thumbnailUrl)
         }
     }
 }

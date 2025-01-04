@@ -10,4 +10,5 @@ import Foundation
 struct PokemonThumbnail: Identifiable {
     let id = UUID().uuidString
     let number: Int
+    let thumbnailUrl: URL
 }
