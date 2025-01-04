@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 final class PokemonThumbnailCell: UICollectionViewCell {
     static let identifier = "PokemonThumbnailCell"
@@ -45,6 +46,9 @@ final class PokemonThumbnailCell: UICollectionViewCell {
     }
     
     func configureCell(with url: URL) {
-        imageView.setImage(from: url)
+        imageView.kf.setImage(
+            with: url,
+            options: [.cacheMemoryOnly]
+        )
     }
 }

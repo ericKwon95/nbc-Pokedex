@@ -92,7 +92,10 @@ final class PokemonDetailStackView: UIStackView {
             print("url 생성 실패")
             return
         }
-        imageView.setImage(from: url)
+        imageView.kf.setImage(
+            with: url,
+            options: [.cacheMemoryOnly]
+        )
         nameLabel.text = "No.\(detail.number) \(detail.name)"
         typeLabel.text = "타입: \(detail.type)"
         heightLabel.text = "키: \(detail.height) m"
