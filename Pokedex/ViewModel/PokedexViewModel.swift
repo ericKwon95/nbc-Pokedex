@@ -9,56 +9,38 @@ import Foundation
 import RxSwift
 
 final class PokedexViewModel {
-    let pokemonListSubject = BehaviorSubject<[Pokemon]>(value: [])
+    let pokemonListSubject = BehaviorSubject<[PokemonThumbnail]>(value: [])
     
-    private let networkManager = NetworkManager.shared
-
     private let limit = 20
     private var offset = 0
     
     private let disposeBag = DisposeBag()
-
+    
     func fetchPokemonList() {
         guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)") else {
             pokemonListSubject.onError(NetworkError.invalidURL)
             return
         }
         
-        networkManager.fetch(url: url)
+        NetworkManager.shared.fetch(url: url)
             .subscribe { [weak self] (response: PokemonListResponse) in
-                self?.fetchPokemonDetail(from: response)
+                let thumbnails = self?.makePokemonThumbnails(from: response)
+                self?.pokemonListSubject.onNext(thumbnails ?? [])
             } onFailure: { [weak self] error in
                 self?.pokemonListSubject.onError(error)
             }
             .disposed(by: disposeBag)
     }
     
-    private func fetchPokemonDetail(from pokemonList: PokemonListResponse) {
-        var fetchedPokemons: [Pokemon] = []
-        pokemonList.results.forEach { response in
-            guard let url = URL(string: response.url) else {
-                self.pokemonListSubject.onError(NetworkError.invalidURL)
-                return
+    private func makePokemonThumbnails(from response: PokemonListResponse) -> [PokemonThumbnail] {
+        response.results.compactMap {
+            let url = $0.url
+            let components = url.components(separatedBy: "/")
+            guard let last = components.last,
+               let number = Int(last) else {
+                return nil
             }
-            
-            networkManager.fetch(url: url)
-                .subscribe { [weak self] (response: PokemonDetailResponse) in
-                    let newPokemon = Pokemon(
-                        number: response.id,
-                        name: response.name,
-                        height: response.height,
-                        weight: response.weight,
-                        type: response.types.first!.type.name
-                    )
-                    fetchedPokemons.append(newPokemon)
-                    
-                    if fetchedPokemons.count == self?.limit {
-                        self?.pokemonListSubject.onNext(fetchedPokemons)
-                    }
-                } onFailure: { [weak self] error in
-                    self?.pokemonListSubject.onError(error)
-                }
-                .disposed(by: disposeBag)
+            return PokemonThumbnail(number: number)
         }
     }
 }
