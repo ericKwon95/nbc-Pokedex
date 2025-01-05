@@ -10,7 +10,6 @@ import RxSwift
 import SnapKit
 
 final class MainViewController: UIViewController {
-    
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     
@@ -55,11 +54,13 @@ final class MainViewController: UIViewController {
         navigationController?.isNavigationBarHidden = false
     }
     
+    // MARK: - Binding
+    
     private func bind() {
         viewModel.pokemonListRelay
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] pokenmonThumbnails in
-                self?.pokemonThumbnails += pokenmonThumbnails
+                self?.pokemonThumbnails = pokenmonThumbnails
                 self?.collectionView.reloadData()
                 self?.isFetching = false
             }
@@ -128,7 +129,7 @@ private extension MainViewController {
     }
 }
 
-// MARK: - Delegates
+// MARK: - DataSource
 
 extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -156,6 +157,8 @@ extension MainViewController: UICollectionViewDataSource {
         return cell
     }
 }
+
+// MARK: - Delegate
 
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

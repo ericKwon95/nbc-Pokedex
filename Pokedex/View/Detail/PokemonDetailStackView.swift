@@ -9,6 +9,8 @@ import UIKit
 import SnapKit
 
 final class PokemonDetailStackView: UIStackView {
+    // MARK: - View Property
+    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -61,6 +63,8 @@ final class PokemonDetailStackView: UIStackView {
         return stackView
     }()
     
+    // MARK: - Initializer
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
@@ -69,6 +73,8 @@ final class PokemonDetailStackView: UIStackView {
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: - Configuration
     
     private func configureUI() {
         [

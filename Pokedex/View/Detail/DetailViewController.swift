@@ -10,11 +10,17 @@ import SnapKit
 import RxSwift
 
 final class DetailViewController: UIViewController {
-    private let pokemonDetailView = PokemonDetailStackView()
-    private let pokemonNumber: Int
     private let viewModel = DetailViewModel()
     private let disposeBag = DisposeBag()
     
+    private let pokemonNumber: Int
+
+    // MARK: - View Property
+    
+    private let pokemonDetailView = PokemonDetailStackView()
+    
+    // MARK: - Initializer
+
     init(pokemonNumber: Int) {
         self.pokemonNumber = pokemonNumber
         super.init(nibName: nil, bundle: nil)
@@ -24,12 +30,16 @@ final class DetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         bind()
         viewModel.fetchPokemonDetail(from: pokemonNumber)
     }
+    
+    // MARK: - Configuration
     
     private func configureUI() {
         view.backgroundColor = .mainRed
@@ -43,6 +53,8 @@ final class DetailViewController: UIViewController {
             $0.height.lessThanOrEqualTo(400)
         }
     }
+    
+    // MARK: - Binding
     
     private func bind() {
         viewModel.pokemonDetailRelay
