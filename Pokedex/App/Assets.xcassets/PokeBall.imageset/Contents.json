@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Pokemon Ball Challenge.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
