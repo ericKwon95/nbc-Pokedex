@@ -94,12 +94,12 @@ final class PokemonDetailStackView: UIStackView {
     }
     
     func setup(with detail: PokemonDetail) {
-        guard let url = URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(detail.number).png") else {
+        guard let thumbnailUrl = Endpoint.pokemonThumbnail(pokemonId: detail.number) else {
             print("url 생성 실패")
             return
         }
         imageView.kf.setImage(
-            with: url,
+            with: thumbnailUrl,
             options: [.cacheMemoryOnly]
         )
         nameLabel.text = "No.\(detail.number) \(detail.name)"

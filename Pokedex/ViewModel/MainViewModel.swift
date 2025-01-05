@@ -20,7 +20,7 @@ final class MainViewModel {
     private let disposeBag = DisposeBag()
     
     func fetchPokemonList() {
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=\(limit)&offset=\(offset)") else {
+        guard let url = Endpoint.pokemonList(limit: limit, offset: offset) else {
             errorRelay.accept(NetworkError.invalidURL)
             return
         }
@@ -43,9 +43,7 @@ final class MainViewModel {
             let components = url.components(separatedBy: "/")
             guard components.count > 1,
                   let number = Int(components[components.count - 2]),
-                  let thumbnailUrl = URL(
-                    string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/\(number).png"
-                  ) else {
+                  let thumbnailUrl = Endpoint.pokemonThumbnail(pokemonId: number) else {
                 return nil
             }
             

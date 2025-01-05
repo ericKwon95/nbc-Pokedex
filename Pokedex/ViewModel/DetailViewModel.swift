@@ -16,7 +16,7 @@ final class DetailViewModel {
     private let disposeBag = DisposeBag()
     
     func fetchPokemonDetail(from number: Int) {
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(number)/") else {
+        guard let url = Endpoint.pokemonDetail(pokemonId: number) else {
             errorRelay.accept(NetworkError.invalidURL)
             return
         }
