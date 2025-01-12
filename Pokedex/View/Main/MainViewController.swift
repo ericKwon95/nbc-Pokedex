@@ -15,8 +15,6 @@ final class MainViewController: UIViewController {
     
     private var pokemonThumbnails = [PokemonThumbnail]()
     
-    private var isFetching = false
-    
     // MARK: - View Property
     
     private lazy var collectionView: UICollectionView = {
@@ -41,7 +39,7 @@ final class MainViewController: UIViewController {
         bind()
         configureDelegates()
         configureUI()
-        viewModel.fetchPokemonList()
+        viewModel.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,7 +60,6 @@ final class MainViewController: UIViewController {
             .subscribe { [weak self] pokenmonThumbnails in
                 self?.pokemonThumbnails = pokenmonThumbnails
                 self?.collectionView.reloadData()
-                self?.isFetching = false
             }
             .disposed(by: disposeBag)
         
@@ -183,10 +180,7 @@ extension MainViewController: UICollectionViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > scrollView.contentSize.height - scrollView.bounds.height {
-            if !isFetching {
-                viewModel.fetchPokemonList()
-                isFetching = true
-            }
+            viewModel.scrollEndReached()
         }
     }
 }

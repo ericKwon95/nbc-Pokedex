@@ -11,8 +11,8 @@ import RxRelay
 
 final class MainViewModel {
     let pokemonListRelay = BehaviorRelay<[PokemonThumbnail]>(value: [])
-    let errorRelay = PublishRelay<Error>()
     let errorStringRelay = PublishRelay<String>()
+    var isFetching = false
     
     private var pokemonList = [PokemonThumbnail]()
     private let limit = 20
@@ -20,7 +20,19 @@ final class MainViewModel {
     
     private let disposeBag = DisposeBag()
     
-    func fetchPokemonList() {
+    func viewDidLoad() {
+        fetchPokemonList()
+    }
+    
+    func scrollEndReached() {
+        if !isFetching {
+            fetchPokemonList()
+        }
+    }
+    
+    private func fetchPokemonList() {
+        isFetching = true
+        
         guard let url = Endpoint.pokemonList(limit: limit, offset: offset) else {
             errorStringRelay.accept(NetworkError.invalidURL.localizedDescription)
             return
@@ -32,8 +44,10 @@ final class MainViewModel {
                 let thumbnails = self?.makePokemonThumbnails(from: response)
                 self?.pokemonList.append(contentsOf: thumbnails ?? [])
                 self?.pokemonListRelay.accept(self?.pokemonList ?? [])
+                self?.isFetching = false
             } onFailure: { [weak self] error in
                 self?.errorStringRelay.accept(error.localizedDescription)
+                self?.isFetching = false
             }
             .disposed(by: disposeBag)
     }
