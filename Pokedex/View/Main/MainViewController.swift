@@ -66,13 +66,28 @@ final class MainViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
-        viewModel.errorRelay
+        viewModel.errorStringRelay
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] error in
-                print(error)
-                self?.isFetching = false
+                self?.showAlert(message: error)
             }
             .disposed(by: disposeBag)
+    }
+    
+    private func showAlert(message: String) {
+        let alert = UIAlertController(
+            title: "오류가 발생했습니다!",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        let okAction = UIAlertAction(
+            title: "확인",
+            style: .default
+        )
+        
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
 

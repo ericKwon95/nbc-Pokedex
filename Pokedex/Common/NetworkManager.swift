@@ -8,10 +8,21 @@
 import Foundation
 import RxSwift
 
-enum NetworkError: Error {
+enum NetworkError: LocalizedError {
     case invalidURL
     case dataFetchFail
     case decodingFail
+    
+    var errorDescription: String {
+        switch self {
+        case .invalidURL:
+            return "유효하지 않은 URL 입니다."
+        case .dataFetchFail:
+            return "데이터 가져오기에 실패했습니다."
+        case .decodingFail:
+            return "데이터 디코딩에 실패했습니다."
+        }
+    }
 }
 
 final class NetworkManager {

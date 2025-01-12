@@ -12,6 +12,7 @@ import RxRelay
 final class MainViewModel {
     let pokemonListRelay = BehaviorRelay<[PokemonThumbnail]>(value: [])
     let errorRelay = PublishRelay<Error>()
+    let errorStringRelay = PublishRelay<String>()
     
     private var pokemonList = [PokemonThumbnail]()
     private let limit = 20
@@ -21,7 +22,7 @@ final class MainViewModel {
     
     func fetchPokemonList() {
         guard let url = Endpoint.pokemonList(limit: limit, offset: offset) else {
-            errorRelay.accept(NetworkError.invalidURL)
+            errorStringRelay.accept(NetworkError.invalidURL.localizedDescription)
             return
         }
         offset += limit
@@ -32,7 +33,7 @@ final class MainViewModel {
                 self?.pokemonList.append(contentsOf: thumbnails ?? [])
                 self?.pokemonListRelay.accept(self?.pokemonList ?? [])
             } onFailure: { [weak self] error in
-                self?.errorRelay.accept(error)
+                self?.errorStringRelay.accept(error.localizedDescription)
             }
             .disposed(by: disposeBag)
     }
