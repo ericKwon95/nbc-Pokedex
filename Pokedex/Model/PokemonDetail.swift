@@ -14,4 +14,12 @@ struct PokemonDetail: Identifiable {
     let height: Measurement<UnitLength>
     let weight: Measurement<UnitMass>
     let type: String
+    
+    static let dummy = PokemonDetail(
+        number: 0,
+        name: "",
+        height: Measurement(value: 0, unit: .meters),
+        weight: Measurement(value: 0, unit: .kilograms),
+        type: ""
+    )
 }

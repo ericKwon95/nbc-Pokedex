@@ -9,15 +9,18 @@ import Foundation
 import RxSwift
 import RxRelay
 
-final class DetailViewModel {
-    let pokemonDetailRelay = PublishRelay<PokemonDetail>()
-    let errorRelay = PublishRelay<Error>()
+final class DetailViewModel: ObservableObject {
+    @Published var pokemonDetail: PokemonDetail = .dummy
+    @Published var errorDescription: String?
     
     private let disposeBag = DisposeBag()
     
+    func onAppear(with number: Int) {
+        fetchPokemonDetail(from: number)
+    }
+    
     func fetchPokemonDetail(from number: Int) {
         guard let url = Endpoint.pokemonDetail(pokemonId: number) else {
-            errorRelay.accept(NetworkError.invalidURL)
             return
         }
         
@@ -30,9 +33,9 @@ final class DetailViewModel {
                     weight: Measurement(value: Double(response.weight), unit: .kilograms),
                     type: PokemonTypeName(rawValue: response.types.first!.type.name)?.displayName ?? "미정"
                 )
-                self?.pokemonDetailRelay.accept(newPokemonDetail)
+                self?.pokemonDetail = newPokemonDetail
             } onFailure: { [weak self] error in
-                self?.errorRelay.accept(error)
+                self?.errorDescription = error.localizedDescription
             }
             .disposed(by: disposeBag)
     }

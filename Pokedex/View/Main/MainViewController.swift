@@ -177,7 +177,7 @@ private extension MainViewController {
 
 extension MainViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let newVC = DetailViewController(pokemonNumber: pokemonThumbnails[indexPath.row].number)
+        let newVC = PokemonDetailHostingController(pokemonNumber: pokemonThumbnails[indexPath.row].number)
         navigationController?.pushViewController(newVC, animated: true)
     }
     
