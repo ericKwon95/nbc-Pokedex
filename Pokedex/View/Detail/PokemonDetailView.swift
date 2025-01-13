@@ -10,6 +10,7 @@ import Kingfisher
 
 struct PokemonDetailView: View {
     @StateObject private var viewModel = DetailViewModel()
+    @State private var isPresentingErrorAlert: Bool = false
     let pokemonNumber: Int
     
     var body: some View {
@@ -56,6 +57,18 @@ struct PokemonDetailView: View {
         }
         .onAppear {
             viewModel.onAppear(with: pokemonNumber)
+        }
+        .alert("오류가 발생했습니다!", isPresented: $isPresentingErrorAlert) {
+            Button("확인", role: .cancel) {
+                isPresentingErrorAlert = false
+            }
+        } message: {
+            Text("\(viewModel.errorDescription ?? "포켓몬 정보를 불러오는 데 실패했습니다.")")
+        }
+        .onChange(of: viewModel.errorDescription) { newValue in
+            if newValue != nil {
+                isPresentingErrorAlert = true
+            }
         }
     }
 }
