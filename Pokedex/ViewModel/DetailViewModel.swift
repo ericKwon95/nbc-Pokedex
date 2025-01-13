@@ -26,8 +26,8 @@ final class DetailViewModel {
                 let newPokemonDetail = PokemonDetail(
                     number: response.id,
                     name: PokemonTranslator.getKoreanName(for: response.name),
-                    height: response.height,
-                    weight: response.weight,
+                    height: Measurement(value: Double(response.height), unit: .meters),
+                    weight: Measurement(value: Double(response.weight), unit: .kilograms),
                     type: PokemonTypeName(rawValue: response.types.first!.type.name)?.displayName ?? "미정"
                 )
                 self?.pokemonDetailRelay.accept(newPokemonDetail)

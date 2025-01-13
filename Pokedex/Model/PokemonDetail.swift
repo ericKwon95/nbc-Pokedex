@@ -11,7 +11,7 @@ struct PokemonDetail: Identifiable {
     let id = UUID()
     let number: Int
     let name: String
-    let height: Int
-    let weight: Int
+    let height: Measurement<UnitLength>
+    let weight: Measurement<UnitMass>
     let type: String
 }

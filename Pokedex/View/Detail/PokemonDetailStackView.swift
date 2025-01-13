@@ -104,7 +104,7 @@ final class PokemonDetailStackView: UIStackView {
         )
         nameLabel.text = "No.\(detail.number) \(detail.name)"
         typeLabel.text = "타입: \(detail.type)"
-        heightLabel.text = "키: \(detail.height) m"
-        weightLabel.text = "몸무게: \(detail.weight) kg"
+        heightLabel.text = "키: \(detail.height)"
+        weightLabel.text = "몸무게: \(detail.weight)"
     }
 }
