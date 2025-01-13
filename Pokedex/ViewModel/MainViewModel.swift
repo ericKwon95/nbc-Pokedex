@@ -10,7 +10,7 @@ import RxSwift
 import RxRelay
 
 final class MainViewModel {
-    let pokemonListRelay = BehaviorRelay<[PokemonThumbnail]>(value: [])
+    let pokemonListRelay = PublishRelay<[PokemonThumbnail]>()
     let errorStringRelay = PublishRelay<String>()
     var isFetching = false
     

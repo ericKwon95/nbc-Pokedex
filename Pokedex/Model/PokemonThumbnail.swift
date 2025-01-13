@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PokemonThumbnail: Identifiable {
+struct PokemonThumbnail: Identifiable, Hashable {
     let id = UUID().uuidString
     let number: Int
     let thumbnailUrl: URL

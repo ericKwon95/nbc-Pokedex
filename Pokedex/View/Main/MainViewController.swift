@@ -9,25 +9,21 @@ import UIKit
 import RxSwift
 import SnapKit
 
+enum Section: CaseIterable {
+    case main
+}
+
 final class MainViewController: UIViewController {
     private let viewModel = MainViewModel()
     private let disposeBag = DisposeBag()
     
     private var pokemonThumbnails = [PokemonThumbnail]()
+    private var dataSource: UICollectionViewDiffableDataSource<Section, PokemonThumbnail>!
     
     // MARK: - View Property
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCompositionalLayout())
-        collectionView.register(
-            PokemonThumbnailCell.self,
-            forCellWithReuseIdentifier: PokemonThumbnailCell.identifier
-        )
-        collectionView.register(
-            PokeBallHeader.self,
-            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-            withReuseIdentifier: PokeBallHeader.identifier
-        )
         collectionView.backgroundColor = .mainRed
         return collectionView
     }()
@@ -37,6 +33,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
+        configureDataSource()
         configureDelegates()
         configureUI()
         viewModel.viewDidLoad()
@@ -58,8 +55,9 @@ final class MainViewController: UIViewController {
         viewModel.pokemonListRelay
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] pokenmonThumbnails in
-                self?.pokemonThumbnails = pokenmonThumbnails
-                self?.collectionView.reloadData()
+                guard let self else { return }
+                self.pokemonThumbnails = pokenmonThumbnails
+                self.applySnapshot(with: pokemonThumbnails)
             }
             .disposed(by: disposeBag)
         
@@ -93,7 +91,6 @@ final class MainViewController: UIViewController {
 private extension MainViewController {
     func configureDelegates() {
         collectionView.delegate = self
-        collectionView.dataSource = self
     }
     
     func configureUI() {
@@ -105,6 +102,41 @@ private extension MainViewController {
         collectionView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
+    }
+    
+    func createCellRegistration() -> UICollectionView.CellRegistration<PokemonThumbnailCell, PokemonThumbnail> {
+        UICollectionView.CellRegistration<PokemonThumbnailCell, PokemonThumbnail> { (cell, indexPath, item) in
+            cell.configureCell(with: item.thumbnailUrl)
+        }
+    }
+    
+    func createHeaderRegistration() -> UICollectionView.SupplementaryRegistration<PokeBallHeader> {
+        UICollectionView.SupplementaryRegistration<PokeBallHeader>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
+        }
+    }
+    
+    func configureDataSource() {
+        let cellRegistration = createCellRegistration()
+        
+        dataSource = UICollectionViewDiffableDataSource<Section, PokemonThumbnail>(collectionView: collectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, item: PokemonThumbnail) -> UICollectionViewCell? in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        }
+        
+        let headerRegistration = createHeaderRegistration()
+        
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+        }
+    }
+    
+    func applySnapshot(with list: [PokemonThumbnail]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, PokemonThumbnail>()
+        
+        snapshot.appendSections([.main])
+        snapshot.appendItems(list)
+        
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     func makeCompositionalLayout() -> UICollectionViewLayout {
@@ -138,35 +170,6 @@ private extension MainViewController {
         section.boundarySupplementaryItems = [header]
         
         return UICollectionViewCompositionalLayout(section: section)
-    }
-}
-
-// MARK: - DataSource
-
-extension MainViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemonThumbnails.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        switch kind {
-        case UICollectionView.elementKindSectionHeader:
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: PokeBallHeader.identifier, for: indexPath) as? PokeBallHeader else {
-                return UICollectionReusableView()
-            }
-            return header
-        default:
-            return UICollectionReusableView()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonThumbnailCell.identifier, for: indexPath) as? PokemonThumbnailCell else {
-            return UICollectionViewCell()
-        }
-        
-        cell.configureCell(with: pokemonThumbnails[indexPath.row].thumbnailUrl)
-        return cell
     }
 }
 
