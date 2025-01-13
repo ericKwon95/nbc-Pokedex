@@ -54,10 +54,10 @@ final class MainViewController: UIViewController {
     private func bind() {
         viewModel.pokemonListRelay
             .observe(on: MainScheduler.instance)
-            .subscribe { [weak self] pokenmonThumbnails in
+            .subscribe { [weak self] pokemonThumbnails in
                 guard let self else { return }
-                self.pokemonThumbnails = pokenmonThumbnails
-                self.applySnapshot(with: pokemonThumbnails)
+                self.pokemonThumbnails += pokemonThumbnails
+                self.applySnapshot(with: self.pokemonThumbnails)
             }
             .disposed(by: disposeBag)
         

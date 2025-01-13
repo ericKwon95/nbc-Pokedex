@@ -14,7 +14,6 @@ final class MainViewModel {
     let errorStringRelay = PublishRelay<String>()
     var isFetching = false
     
-    private var pokemonList = [PokemonThumbnail]()
     private let limit = 20
     private var offset = 0
     
@@ -42,8 +41,7 @@ final class MainViewModel {
         NetworkManager.shared.fetch(url: url)
             .subscribe { [weak self] (response: PokemonListResponse) in
                 let thumbnails = self?.makePokemonThumbnails(from: response)
-                self?.pokemonList.append(contentsOf: thumbnails ?? [])
-                self?.pokemonListRelay.accept(self?.pokemonList ?? [])
+                self?.pokemonListRelay.accept(thumbnails ?? [])
                 self?.isFetching = false
             } onFailure: { [weak self] error in
                 self?.errorStringRelay.accept(error.localizedDescription)
