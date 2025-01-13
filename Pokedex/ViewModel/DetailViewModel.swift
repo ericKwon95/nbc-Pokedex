@@ -25,6 +25,7 @@ final class DetailViewModel: ObservableObject {
         }
         
         NetworkManager.shared.fetch(url: url)
+            .observe(on: MainScheduler.instance)
             .subscribe { [weak self] (response: PokemonDetailResponse) in
                 let newPokemonDetail = PokemonDetail(
                     number: response.id,
