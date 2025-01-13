@@ -8,6 +8,10 @@
 import Foundation
 import RxSwift
 
+protocol NetworkManageable {
+    func fetch<T: Decodable>(url: URL) -> Single<T>
+}
+
 enum NetworkError: LocalizedError {
     case invalidURL
     case dataFetchFail
@@ -25,7 +29,7 @@ enum NetworkError: LocalizedError {
     }
 }
 
-final class NetworkManager {
+final class NetworkManager: NetworkManageable {
     static let shared = NetworkManager()
     
     private let session = URLSession.shared

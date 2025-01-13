@@ -10,6 +10,7 @@ import RxSwift
 import RxRelay
 
 final class MainViewModel {
+    private let networkManager: NetworkManageable = NetworkManager.shared
     let pokemonListRelay = PublishRelay<[PokemonThumbnail]>()
     let errorStringRelay = PublishRelay<String>()
     var isFetching = false
@@ -38,7 +39,7 @@ final class MainViewModel {
         }
         offset += limit
 
-        NetworkManager.shared.fetch(url: url)
+        networkManager.fetch(url: url)
             .subscribe { [weak self] (response: PokemonListResponse) in
                 let thumbnails = self?.makePokemonThumbnails(from: response)
                 self?.pokemonListRelay.accept(thumbnails ?? [])
