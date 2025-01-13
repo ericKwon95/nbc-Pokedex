@@ -11,7 +11,15 @@ struct PokemonDetail: Identifiable {
     let id = UUID()
     let number: Int
     let name: String
-    let height: Int
-    let weight: Int
+    let height: Measurement<UnitLength>
+    let weight: Measurement<UnitMass>
     let type: String
+    
+    static let dummy = PokemonDetail(
+        number: 0,
+        name: "",
+        height: Measurement(value: 0, unit: .meters),
+        weight: Measurement(value: 0, unit: .kilograms),
+        type: ""
+    )
 }
